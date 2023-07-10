@@ -14,7 +14,7 @@ const initialState = {
   teams: [
     {
       teamName: "teamA",
-      teamColor: "orange",
+      teamColor: "rgb(0, 255, 0)",
       players: [
         {
           name: "Faniel",

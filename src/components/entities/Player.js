@@ -5,10 +5,10 @@ import { Circle, Text } from "react-konva";
  *
  * @returns player representation
  */
-function Player({ x, y, teamColor, num }) {
+function Player({ x, y, color, num }) {
   return [
-    <Circle x={x} y={y} radius={12} stroke={teamColor} fill={teamColor} />,
-    <Text x={x - 5} y={y - 5} text={"" + num} fill="white" />,
+    <Circle x={x} y={y} radius={4} stroke={color} fill={color} />,
+    <Text x={x - 5} y={y - 5} fill="white" />,
   ];
 }
 

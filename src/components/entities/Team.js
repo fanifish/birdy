@@ -13,13 +13,7 @@ function Team({ players, teamColor, px, py, width, height }) {
         const x = px + player.pos.x * width;
         const y = py + player.pos.y * height;
         return (
-          <Player
-            key={key}
-            x={x}
-            y={y}
-            teamColor={teamColor}
-            num={player.num}
-          />
+          <Player key={key} x={x} y={y} color={teamColor} num={player.num} />
         );
       })}
     </>
