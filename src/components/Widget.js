@@ -8,7 +8,7 @@ import Player from "./entities/Player";
 
 import PurpleCameraImage from '../images/purple_camera.png';
 import YellowCameraImage from '../images/yellow_camera.png';
-import {updateHeatMapImage} from "../redux/slices/viewSlice";
+import {closeModal, openModal, updateHeatMapImage} from "../redux/slices/viewSlice";
 
 export default function Widget() {
   const dispatch = useDispatch();
@@ -39,7 +39,7 @@ export default function Widget() {
   }
 
   return (
-    <Row>
+    <Row className="text-neutral-50">
       <Col>
         <Stage width={widgetWidth} height={widgetHeight}>
           <Layer>
@@ -111,6 +111,10 @@ export default function Widget() {
         </Stage>
       </Col>
       <Col>
+        <div className="flex flex-col items-end">
+          <p onClick={() => dispatch(closeModal())} className="bg-slate-800 hover:bg-slate-600 p-2 w-[40px] h-[40px] rounded-full text-center cursor-pointer transition-all">X</p>
+        </div>
+        <h1 className="text-2xl font-light">Select Player Heatmap</h1>
         <Input
           type="select"
           value={player}
@@ -120,6 +124,7 @@ export default function Widget() {
             <option key={key}>{name}</option>
           ))}
         </Input>
+        <p className="text-slate-500 text-sm pt-2">Selecting a player will show the players position heatmap for a given period of time</p>
       </Col>
     </Row>
   );

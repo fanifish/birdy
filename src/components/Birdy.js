@@ -8,6 +8,7 @@ import { useDispatch } from "react-redux";
 import { setPlayers } from "../redux/slices/playersSlice";
 import { setBallPosition } from "../redux/slices/ballSlice";
 import Player from "./entities/Player";
+import {openModal} from "../redux/slices/viewSlice";
 
 const xpos = 0;
 const ypos = 0;
@@ -55,14 +56,8 @@ function Birdy() {
           width={videoWidth}
           height={videoHeight + 15}
         />
-        <Text
-          x={videoX}
-          y={videoY}
-          text={"" + videoState.currentTime}
-          fill="red"
-        />
       </Layer>
-      <Layer>
+      <Layer onClick={() => dispatch(openModal())}>
         <SoccerPitch
           px={pitchX}
           py={pitchY}

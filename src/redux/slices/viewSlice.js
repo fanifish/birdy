@@ -9,10 +9,18 @@ const viewSlice = createSlice({
     updateHeatMapImage: (state, action) => ({
       ...state,
       heatMapImage: action.payload,
+    }),
+    openModal: (state, action) => ({
+      ...state,
+      modalOpen: true,
+    }),
+    closeModal: (state, action) => ({
+      ...state,
+      modalOpen: false,
     })
   },
 });
 
-export const { updateHeatMapImage} = viewSlice.actions;
+export const { updateHeatMapImage, openModal, closeModal} = viewSlice.actions;
 
 export default viewSlice.reducer;
