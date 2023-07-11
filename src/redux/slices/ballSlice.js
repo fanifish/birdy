@@ -3,10 +3,16 @@ import initialState from "../initialState";
 
 export const ballSlice = createSlice({
   name: "ball",
-  initialState: initialState.ballState,
-  reducers: {},
+  initialState: {
+    pos: [0, 0],
+  },
+  reducers: {
+    setBallPosition: (state, action) => {
+      state.pos = action.payload;
+    },
+  },
 });
 
-export const {} = ballSlice.actions;
+export const { setBallPosition } = ballSlice.actions;
 
 export default ballSlice.reducer;

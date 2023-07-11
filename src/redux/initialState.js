@@ -1,6 +1,7 @@
 const initialState = {
   videoPlayer: {
     currentTime: 0,
+    aspectRatio: 0,
   },
   ballState: {
     pos: {

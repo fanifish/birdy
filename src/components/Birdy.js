@@ -4,9 +4,9 @@ import Ball from "./entities/Ball";
 import { useSelector } from "react-redux";
 import { useState, useLayoutEffect, useEffect } from "react";
 import BirdyPlayer from "./BirdyPlayer";
-
 import { useDispatch } from "react-redux";
 import { setPlayers } from "../redux/slices/playersSlice";
+import { setBallPosition } from "../redux/slices/ballSlice";
 import Player from "./entities/Player";
 
 function useWindowSize() {
@@ -24,11 +24,12 @@ function useWindowSize() {
 
 const xpos = 0;
 const ypos = 0;
-const margin = 100;
-const videoWidth = 1000;
-const videoHeight = 600;
-const birdyWidth = 300;
-const birdyHeight = 150;
+
+// const videoWidth = 1000;
+// const videoHeight = 600;
+
+// const birdyWidth = 300;
+// const birdyHeight = 150;
 
 function Birdy() {
   const SCENE_BASE_WIDTH = 3000;
@@ -38,8 +39,6 @@ function Birdy() {
 
   const dispatch = useDispatch();
 
-  const scale = width / SCENE_BASE_WIDTH;
-
   const teamsState = useSelector((state) => state.teams);
 
   const playersState = useSelector((state) => state.players);
@@ -47,12 +46,18 @@ function Birdy() {
   const viewState = useSelector((state) => state.view);
 
   const ballState = useSelector((state) => state.ball);
+  console.log(ballState);
 
   const videoState = useSelector((state) => state.video);
-  const { currentTime } = videoState;
+  const { currentTime, width: videoWidth, height: videoHeight } = videoState;
 
-  const videoX = xpos + margin;
-  const videoY = ypos + margin;
+  const videoX = xpos;
+  const videoY = ypos;
+
+  console.log({ videoWidth, videoHeight });
+
+  const birdyWidth = Math.min(videoWidth / 2, 300);
+  const birdyHeight = birdyWidth / 2;
 
   const pitchX = videoX + videoWidth / 2 - birdyWidth / 2;
   const pitchY = videoY + videoHeight - birdyHeight;
@@ -66,17 +71,17 @@ function Birdy() {
       fetch(url)
         .then((resp) => resp.json())
         .then((data) => {
-          console.log(data.players);
           dispatch(setPlayers(data.players));
+          dispatch(setBallPosition(data.ball?.coords));
         });
     }
   }, [currentTime, dispatch]);
 
   return (
-    <Stage width={width} height={height}>
+    <Stage width={videoWidth} height={videoHeight}>
       <Layer>
         <BirdyPlayer
-          src={process.env.PUBLIC_URL + "/assets/BarcavsReal.mp4"}
+          src={process.env.PUBLIC_URL + "/assets/ManCityVsManUtd.mp4"}
           width={videoWidth}
           height={videoHeight}
         />
@@ -87,7 +92,7 @@ function Birdy() {
           fill="red"
         />
       </Layer>
-      <Layer width={width / 2} height={height / 2}>
+      <Layer>
         <SoccerPitch
           px={pitchX}
           py={pitchY}
@@ -95,7 +100,7 @@ function Birdy() {
           height={birdyHeight}
         />
         <>
-          {playersState.players.map(({ coords, color }, key) => {
+          {(playersState.players ?? []).map(({ coords, color }, key) => {
             const x = pitchX + coords[0] * birdyWidth;
             const y = pitchY + coords[1] * birdyHeight;
             const rgbColor = `rgb(${color[0]}, ${color[1]}, ${color[2]})`;
@@ -107,13 +112,12 @@ function Birdy() {
             return <Player key={key} x={x} y={y} color={rgbColor} />;
           })}
         </>
-        <Ball
-          pos={ballState.pos}
-          px={pitchX}
-          py={pitchY}
-          width={birdyWidth}
-          height={birdyHeight}
-        />
+        {ballState.pos && (
+          <Ball
+            x={pitchX + ballState.pos[0] * birdyWidth}
+            y={pitchY + ballState.pos[1] * birdyHeight}
+          />
+        )}
       </Layer>
     </Stage>
   );

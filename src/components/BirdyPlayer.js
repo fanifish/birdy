@@ -2,7 +2,9 @@ import React from "react";
 import { Image } from "react-konva";
 import { useDispatch } from "react-redux";
 import Konva from "konva";
-import { updateTime } from "../redux/slices/videoSlice";
+import { updateTime, updateSize } from "../redux/slices/videoSlice";
+import { updateAspectRatio } from "../redux/slices/videoSlice";
+import { useWindowSize } from "@uidotdev/usehooks";
 
 const xpos = 0;
 const ypos = 0;
@@ -16,7 +18,7 @@ function BirdyPlayer({ src, width, height }) {
 
   const dispatch = useDispatch();
 
-  const [size, setSize] = React.useState({ width, height });
+  const { width: windowWidth } = useWindowSize();
 
   // we need to use "useMemo" here, so we don't create new video elment on any render
   const videoElement = React.useMemo(() => {
@@ -30,10 +32,14 @@ function BirdyPlayer({ src, width, height }) {
   // when video is loaded, we should read it size
   React.useEffect(() => {
     const onload = function () {
-      setSize({
-        width: videoElement.videoWidth,
-        height: videoElement.videoHeight,
-      });
+      const aspectRatio = videoElement.videoWidth / videoElement.videoHeight;
+      console.log(aspectRatio);
+      const videoWidth = Math.max(
+        0,
+        (windowWidth ?? 0) > 80 ? windowWidth - 80 : 0
+      );
+      const videoHeight = videoWidth / aspectRatio;
+      dispatch(updateSize({ width: videoWidth, height: videoHeight }));
     };
 
     videoElement.addEventListener("loadedmetadata", onload);
@@ -45,7 +51,7 @@ function BirdyPlayer({ src, width, height }) {
     return () => {
       videoElement.removeEventListener("loadedmetadata", onload);
     };
-  }, [videoElement, dispatch]);
+  }, [videoElement, windowWidth, dispatch]);
 
   // use Konva.Animation to redraw a layer
   React.useEffect(() => {
@@ -62,12 +68,11 @@ function BirdyPlayer({ src, width, height }) {
     <Image
       ref={imageRef}
       image={videoElement}
-      x={xpos + pitchMargin}
-      y={ypos + pitchMargin}
+      x={xpos}
+      y={ypos}
       stroke="red"
       width={width}
       height={height}
-      draggable
     />
   );
 }
