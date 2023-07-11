@@ -5,9 +5,14 @@ import initialState from "../initialState";
 const viewSlice = createSlice({
   name: "view",
   initialState: initialState.view,
-  reducers: {},
+  reducers: {
+    updateHeatMapImage: (state, action) => ({
+      ...state,
+      heatMapImage: action.payload,
+    })
+  },
 });
 
-export const {} = viewSlice.actions;
+export const { updateHeatMapImage} = viewSlice.actions;
 
 export default viewSlice.reducer;

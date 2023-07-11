@@ -1,9 +1,6 @@
 .App {
   background-color: #2f2f2f;
-  padding: 40px 40px 0 40px;
   box-sizing: border-box;
-  min-height: 100vh;
   display: flex;
   flex-direction: column;
-  gap: 20px;
 }

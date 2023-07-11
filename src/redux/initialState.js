@@ -11,6 +11,7 @@ const initialState = {
   },
   view: {
     birdyOpacity: 1,
+    heatMapImage: 1,
   },
   teams: [
     {

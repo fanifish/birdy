@@ -1,4 +1,6 @@
 import { Rect, Line, Circle, Arc } from "react-konva";
+import Heatmap from "./Heatmap";
+import {useSelector} from "react-redux";
 
 /**
  * Constants used for rendering the pitch.
@@ -17,6 +19,8 @@ function SoccerPitch({
   height,
   withBackground = false,
 }) {
+  const viewState = useSelector((state) => state.view);
+  
   return (
     <>
       {withBackground && (
@@ -94,6 +98,14 @@ function SoccerPitch({
         rotationDeg={90}
         innerRadius={goalSemiCircleRadius}
         outerRadius={goalSemiCircleRadius}
+      />
+      <Heatmap
+        currentImage={viewState.heatMapImage}
+        x={px}
+        y={py}
+        width={width}
+        height={height}
+        opacity={withBackground ? 0.5 : 0}
       />
     </>
   );

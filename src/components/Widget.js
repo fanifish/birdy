@@ -1,12 +1,23 @@
 import React, { useState } from "react";
-import { Layer, Rect, Stage } from "react-konva";
+import { Layer, Rect, Stage, Image } from "react-konva";
+import useImage from "use-image";
 import SoccerPitch from "./layers/SoccerPitchLayer";
-import { useSelector } from "react-redux";
-import { Col, Input, Row } from "reactstrap";
+import {useDispatch, useSelector} from "react-redux";
+import {Button, Col, Input, Row} from "reactstrap";
 import Player from "./entities/Player";
 
+import PurpleCameraImage from '../images/purple_camera.png';
+import YellowCameraImage from '../images/yellow_camera.png';
+import {updateHeatMapImage} from "../redux/slices/viewSlice";
+
 export default function Widget() {
+  const dispatch = useDispatch();
+  const viewState = useSelector((state) => state.view);
+  
   const [player, setPlayer] = useState(undefined);
+  
+  const [purpleCamera] = useImage(PurpleCameraImage);
+  const [yellowCamera] = useImage(YellowCameraImage);
 
   const [leftCamera, setLeftCamera] = useState(true);
   const [rightCamera, setRightCamera] = useState(true);
@@ -21,6 +32,11 @@ export default function Widget() {
 
   const widgetWidth = videoWidth / 2;
   const widgetHeight = widgetWidth / 2;
+  
+  const handlePlayerChange = (e) => {
+    setPlayer(e.target.value);
+    dispatch(updateHeatMapImage(viewState.heatMapImage === 1 ? 2 : 1));
+  }
 
   return (
     <Row>
@@ -42,14 +58,15 @@ export default function Widget() {
           </Layer>
           <Layer>
             {leftCamera && (
-              <Rect
-                x={100}
-                y={100}
-                width={100}
-                height={200}
-                fill="yellow"
+              <Image
+                image={yellowCamera}
+                x={30}
+                y={widgetHeight - 30}
+                offsetX={widgetHeight * .25}
+                rotation={180 + 45}
+                width={widgetHeight * .5}
+                height={widgetHeight * .75}
                 opacity={leftCameraShowing ? 0.8 : 0.5}
-                rotation={45}
                 onClick={() => {
                   setLeftCameraShowing((current) => !current);
                   setRightCameraShowing(false);
@@ -57,14 +74,15 @@ export default function Widget() {
               />
             )}
             {rightCamera && (
-              <Rect
-                x={widgetWidth - 160}
-                y={190}
-                width={100}
-                height={200}
-                fill="purple"
+              <Image
+                image={purpleCamera}
+                x={widgetWidth - 30}
+                y={widgetHeight - 30}
+                offsetX={widgetHeight * .25}
+                rotation={180 - 45}
+                width={widgetHeight * .5}
+                height={widgetHeight * .75}
                 opacity={rightCameraShowing ? 0.8 : 0.5}
-                rotation={-45}
                 onClick={() => {
                   setRightCameraShowing((current) => !current);
                   setLeftCameraShowing(false);
@@ -96,16 +114,11 @@ export default function Widget() {
         <Input
           type="select"
           value={player}
-          onChange={() =>
-            setPlayer(players[Math.floor(Math.random() * players.length)])
-          }
+          onChange={handlePlayerChange}
         >
           {mockedPlayers.map((name, key) => (
             <option key={key}>{name}</option>
           ))}
-          <option>Angle: Bottom-left</option>
-          <option>Angle: Bottom-center</option>
-          <option>Angle: Bottom-right</option>
         </Input>
       </Col>
     </Row>

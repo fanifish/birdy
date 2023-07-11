@@ -34,10 +34,7 @@ function BirdyPlayer({ src, width, height }) {
     const onload = function () {
       const aspectRatio = videoElement.videoWidth / videoElement.videoHeight;
       console.log(aspectRatio);
-      const videoWidth = Math.max(
-        0,
-        (windowWidth ?? 0) > 80 ? windowWidth - 80 : 0
-      );
+      const videoWidth = windowWidth;
       const videoHeight = videoWidth / aspectRatio;
       dispatch(updateSize({ width: videoWidth, height: videoHeight }));
     };

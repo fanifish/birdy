@@ -33,7 +33,7 @@ function Birdy() {
   const birdyHeight = birdyWidth / 2;
 
   const pitchX = videoX + videoWidth / 2 - birdyWidth / 2;
-  const pitchY = videoY + videoHeight - birdyHeight;
+  const pitchY = videoY + videoHeight - birdyHeight - 30;
 
   useEffect(() => {
     const currentTimeInSeconds = Math.floor(currentTime / 1000);
@@ -48,12 +48,12 @@ function Birdy() {
   }, [currentTime, dispatch]);
 
   return (
-    <Stage width={videoWidth} height={videoHeight}>
+    <Stage width={videoWidth} height={videoHeight + 15}>
       <Layer>
         <BirdyPlayer
           src={process.env.PUBLIC_URL + "/assets/ManCityVsManUtd.mp4"}
           width={videoWidth}
-          height={videoHeight}
+          height={videoHeight + 15}
         />
         <Text
           x={videoX}
