@@ -34,7 +34,7 @@ function App() {
         </div>
         <div className="flex items-end gap-2">
           <h2 className="text-md font-light uppercase">Birdy</h2>
-          <p className="text-sm text-red-500 font-bold uppercase">Demo</p>
+          <p className="text-sm text-red-500 font-bold uppercase rounded border-1 p-1 border-red-700">Demo</p>
         </div>
       </div>
       <Birdy />
