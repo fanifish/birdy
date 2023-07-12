@@ -16,15 +16,6 @@ export default function Widget() {
   
   const [player, setPlayer] = useState(undefined);
   
-  const [purpleCamera] = useImage(PurpleCameraImage);
-  const [yellowCamera] = useImage(YellowCameraImage);
-
-  const [leftCamera, setLeftCamera] = useState(true);
-  const [rightCamera, setRightCamera] = useState(true);
-
-  const [leftCameraShowing, setLeftCameraShowing] = useState(false);
-  const [rightCameraShowing, setRightCameraShowing] = useState(false);
-
   const videoState = useSelector((state) => state.video);
   const { width: videoWidth } = videoState;
 
@@ -56,63 +47,11 @@ export default function Widget() {
               return <Player key={key} x={x} y={y} color={rgbColor} num={""} />;
             })}
           </Layer>
-          <Layer>
-            {leftCamera && (
-              <Image
-                image={yellowCamera}
-                x={30}
-                y={widgetHeight - 30}
-                offsetX={widgetHeight * .25}
-                rotation={180 + 45}
-                width={widgetHeight * .5}
-                height={widgetHeight * .75}
-                opacity={leftCameraShowing ? 0.8 : 0.5}
-                onClick={() => {
-                  setLeftCameraShowing((current) => !current);
-                  setRightCameraShowing(false);
-                }}
-              />
-            )}
-            {rightCamera && (
-              <Image
-                image={purpleCamera}
-                x={widgetWidth - 30}
-                y={widgetHeight - 30}
-                offsetX={widgetHeight * .25}
-                rotation={180 - 45}
-                width={widgetHeight * .5}
-                height={widgetHeight * .75}
-                opacity={rightCameraShowing ? 0.8 : 0.5}
-                onClick={() => {
-                  setRightCameraShowing((current) => !current);
-                  setLeftCameraShowing(false);
-                }}
-              />
-            )}
-            <Rect
-              x={0}
-              y={widgetHeight - 30}
-              width={30}
-              height={30}
-              fill="black"
-              opacity={1}
-              onClick={() => setLeftCamera((current) => !current)}
-            />
-            <Rect
-              x={widgetWidth - 30}
-              y={widgetHeight - 30}
-              width={30}
-              height={30}
-              fill="black"
-              opacity={1}
-              onClick={() => setRightCamera((current) => !current)}
-            />
-          </Layer>
         </Stage>
       </Col>
       <Col>
         <div className="flex flex-col items-end">
-          <p onClick={() => dispatch(closeModal())} className="bg-slate-800 hover:bg-slate-600 p-2 w-[40px] h-[40px] rounded-full text-center cursor-pointer transition-all">X</p>
+          <p onClick={() => dispatch(closeModal())} className="bg-slate-800 hover:bg-slate-600 p-2 w-[40px] h-[40px] rounded-full text-center cursor-pointer transition-all select-none">X</p>
         </div>
         <h1 className="text-2xl font-light">Select Player Heatmap</h1>
         <Input

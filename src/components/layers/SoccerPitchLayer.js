@@ -18,18 +18,20 @@ function SoccerPitch({
   width,
   height,
   withBackground = false,
+  withLightBackground = false,
 }) {
   const viewState = useSelector((state) => state.view);
   
   return (
     <>
-      {withBackground && (
+      {(withBackground || withLightBackground) && (
         <Rect
           x={px}
           y={py}
           width={width}
           height={height}
           fill="green"
+          opacity={withLightBackground ? 0.5 : 1}
           shadowBlur={10}
         />
       )}

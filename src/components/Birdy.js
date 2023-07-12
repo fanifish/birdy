@@ -1,14 +1,17 @@
-import { Stage, Layer, Text } from "react-konva";
+import {Stage, Layer, Text, Image, Rect} from "react-konva";
 import SoccerPitch from "./layers/SoccerPitchLayer";
 import Ball from "./entities/Ball";
 import { useSelector } from "react-redux";
-import { useEffect } from "react";
+import React, {useEffect, useState} from "react";
 import BirdyPlayer from "./BirdyPlayer";
 import { useDispatch } from "react-redux";
 import { setPlayers } from "../redux/slices/playersSlice";
 import { setBallPosition } from "../redux/slices/ballSlice";
 import Player from "./entities/Player";
 import {openModal} from "../redux/slices/viewSlice";
+import useImage from "use-image";
+import PurpleCameraImage from "../images/purple_camera.png";
+import YellowCameraImage from "../images/yellow_camera.png";
 
 const xpos = 0;
 const ypos = 0;
@@ -35,7 +38,16 @@ function Birdy() {
 
   const pitchX = videoX + videoWidth / 2 - birdyWidth / 2;
   const pitchY = videoY + videoHeight - birdyHeight - 30;
-
+  
+  const [purpleCamera] = useImage(PurpleCameraImage);
+  const [yellowCamera] = useImage(YellowCameraImage);
+  
+  const [leftCamera, setLeftCamera] = useState(true);
+  const [rightCamera, setRightCamera] = useState(true);
+  
+  const [leftCameraShowing, setLeftCameraShowing] = useState(false);
+  const [rightCameraShowing, setRightCameraShowing] = useState(false);
+  
   useEffect(() => {
     const currentTimeInSeconds = Math.floor(currentTime / 1000);
     const segmentNumber = Math.floor(currentTimeInSeconds / 2);
@@ -63,6 +75,7 @@ function Birdy() {
           py={pitchY}
           width={birdyWidth}
           height={birdyHeight}
+          withLightBackground={true}
         />
         <>
           {(playersState.players ?? []).map(
@@ -81,6 +94,58 @@ function Birdy() {
             y={pitchY + ballState.pos[1] * birdyHeight}
           />
         )}
+      </Layer>
+      <Layer>
+        {leftCamera && (
+          <Image
+            image={yellowCamera}
+            x={pitchX + 30}
+            y={pitchY + birdyHeight - 30}
+            offsetX={birdyHeight * .25}
+            rotation={180 + 45}
+            width={birdyHeight * .5}
+            height={birdyHeight * .75}
+            opacity={leftCameraShowing ? 0.8 : 0.5}
+            onClick={() => {
+              setLeftCameraShowing((current) => !current);
+              setRightCameraShowing(false);
+            }}
+          />
+        )}
+        {rightCamera && (
+          <Image
+            image={purpleCamera}
+            x={pitchX + birdyWidth - 30}
+            y={pitchY + birdyHeight - 30}
+            offsetX={birdyHeight * .25}
+            rotation={180 - 45}
+            width={birdyHeight * .5}
+            height={birdyHeight * .75}
+            opacity={rightCameraShowing ? 0.8 : 0.5}
+            onClick={() => {
+              setRightCameraShowing((current) => !current);
+              setLeftCameraShowing(false);
+            }}
+          />
+        )}
+        <Rect
+          x={pitchX}
+          y={pitchY + birdyHeight - 30}
+          width={30}
+          height={30}
+          fill="black"
+          opacity={0.25}
+          onClick={() => setLeftCamera((current) => !current)}
+        />
+        <Rect
+          x={pitchX + birdyWidth - 30}
+          y={pitchY + birdyHeight - 30}
+          width={30}
+          height={30}
+          fill="black"
+          opacity={0.25}
+          onClick={() => setRightCamera((current) => !current)}
+        />
       </Layer>
     </Stage>
   );
